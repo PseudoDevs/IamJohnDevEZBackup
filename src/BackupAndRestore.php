@@ -1,20 +1,23 @@
-<?php 
+<?php
 
 namespace IamJohnDevEZBackup;
 
-class BackupAndRestore {
+class BackupAndRestore
+{
     private $pdo;
     private $export_file;
     private $import_file;
 
-    public function setConfig($host, $user, $pass, $db, $export_file = null, $import_file = null) {
+    public function setConfig($host, $user, $pass, $db, $export_file = null, $import_file = null)
+    {
         $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
         $this->pdo = new PDO($dsn, $user, $pass);
         $this->export_file = $export_file;
         $this->import_file = $import_file;
     }
 
-    public function backupToCSV() {
+    public function backupToCSV()
+    {
         // Fetch data from database
         $data = $this->getData();
 
@@ -33,7 +36,8 @@ class BackupAndRestore {
         fclose($fp);
     }
 
-    public function backupToJSON() {
+    public function backupToJSON()
+    {
         // Fetch data from database
         $data = $this->getData();
 
@@ -44,7 +48,8 @@ class BackupAndRestore {
         file_put_contents($this->export_file, $json_data);
     }
 
-    public function backupToXLS() {
+    public function backupToXLS()
+    {
         // Fetch data from database
         $data = $this->getData();
 
@@ -53,10 +58,10 @@ class BackupAndRestore {
 
         // Set document properties
         $objPHPExcel->getProperties()->setCreator("BackupAndRestore")
-                             ->setLastModifiedBy("BackupAndRestore")
-                             ->setTitle("BackupAndRestore Data")
-                             ->setSubject("BackupAndRestore Data")
-                             ->setDescription("BackupAndRestore Data");
+            ->setLastModifiedBy("BackupAndRestore")
+            ->setTitle("BackupAndRestore Data")
+            ->setSubject("BackupAndRestore Data")
+            ->setDescription("BackupAndRestore Data");
 
         // Add header row
         $header = array_keys($data[0]);
@@ -77,7 +82,8 @@ class BackupAndRestore {
         $writer->save($this->export_file);
     }
 
-    public function restoreFromCSV($file) {
+    public function restoreFromCSV($file)
+    {
         // Open the import file
         $fp = fopen($file['tmp_name'], 'r');
 
@@ -102,56 +108,58 @@ class BackupAndRestore {
             $stmt->execute($row);
         }
     }
-    public function restoreFromJSON($file) {
+    public function restoreFromJSON($file)
+    {
         // Read the import file
         $json_data = file_get_contents($file['tmp_name']);
-    
+
         // Convert JSON to data
         $data = json_decode($json_data, true);
-    
+
         // Truncate the table
         $this->pdo->exec("TRUNCATE table_name");
-    
+
         // Insert the data
         foreach ($data as $row) {
             $stmt = $this->pdo->prepare("INSERT INTO table_name (col1, col2, col3) VALUES (?, ?, ?)");
             $stmt->execute(array(
                 $row['col1'],
                 $row['col2'],
-                $row['col3']
+                $row['col3'],
             ));
         }
     }
-    
-    public function restoreFromXLS($file) {
+
+    public function restoreFromXLS($file)
+    {
         // Load the import file
         $objPHPExcel = PHPExcel_IOFactory::load($file['tmp_name']);
-    
+
         // Get the data from the worksheet
         $worksheet = $objPHPExcel->getActiveSheet();
         $data = array();
         foreach ($worksheet->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(false);
-    
+
             $values = array();
             foreach ($cellIterator as $cell) {
                 $values[] = $cell->getValue();
             }
-    
+
             $data[] = $values;
         }
-    
+
         // Truncate the table
         $this->pdo->exec("TRUNCATE table_name");
-    
+
         // Insert the data
         foreach ($data as $row) {
             $stmt = $this->pdo->prepare("INSERT INTO table_name (col1, col2, col3) VALUES (?, ?, ?)");
             $stmt->execute(array(
                 $row[0],
                 $row[1],
-                $row[2]
+                $row[2],
             ));
         }
     }
