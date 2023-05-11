@@ -24,7 +24,7 @@ use IamJohnDevEZBackup\BackupAndRestore;
 $backup = new BackupAndRestore();
 
 // Set the database configuration
-$backup->setConfig('localhost', 'username', 'password', 'database', 'export_file.csv', 'import_file.csv');
+$backup->setConfig('localhost', 'username', 'password', 'database', 'path/to/export_file', 'path/to/import_file');
 
 ```
 Once you`ve set the configuration, you can call any of the available backup/restore methods:
