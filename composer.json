@@ -1,0 +1,24 @@
+{
+    "name": "iamjohndev/ijd-ezbackup",
+    "description": "A simple and lightweight PHP library for backing up MySQL database.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Lester Legaspi",
+            "email": "contact@iamjohndev.fun"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "IamJohnDevEZBackup\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "ext-mysqli": "*"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "version": "1.0.0"
+}
