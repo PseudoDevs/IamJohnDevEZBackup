@@ -10,7 +10,7 @@ Next, navigate to your project directory in the terminal/command prompt.
 
 Run the following command to install **EZBackup** and its dependencies:
 ```php
-    composer require iamjohndev/ezbackup
+    composer require iamjohndev/ijd-ezbackup
 ```
 Once **Composer** has finished installing the library, you can start using it in your project.
 
