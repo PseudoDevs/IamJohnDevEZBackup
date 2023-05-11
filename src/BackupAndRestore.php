@@ -2,6 +2,11 @@
 
 namespace IamJohnDevEZBackup;
 
+use PDO;
+use PHPExcel;
+use PHPExcel_IOFactory;
+use Psr\Log\LoggerInterface;
+
 class BackupAndRestore
 {
     private $pdo;
